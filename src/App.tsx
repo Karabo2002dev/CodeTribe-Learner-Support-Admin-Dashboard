@@ -1,9 +1,15 @@
 import './App.css'
 import LogInPage from './pages/LogInPage'
+import { Route, Routes } from 'react-router'
+import RegisterPage from './pages/RegisterPage'
+
 
 function App() {
   return (
-    <LogInPage />
+    <Routes>
+      <Route path='/' element={<RegisterPage/>} />
+      <Route path='/login' element={<LogInPage/>} />
+    </Routes>
   )
 }
 
