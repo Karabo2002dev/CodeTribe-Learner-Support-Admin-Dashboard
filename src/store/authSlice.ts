@@ -27,3 +27,50 @@ export const registerUser = createAsyncThunk(
     }
   }
 );
+
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState: {
+    user: null,
+    loading: false,
+    success: false,
+    error: null as string | null,
+  },
+  reducers: {
+    clearStatus: (state) => {
+      state.error = null;
+      state.success = false;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.user = action.payload;
+      })
+      .addCase(loginUser.rejected, (state, action: any) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(registerUser.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(registerUser.rejected, (state, action: any) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
+});
+
+export const { clearStatus } = authSlice.actions;
+export default authSlice.reducer;
