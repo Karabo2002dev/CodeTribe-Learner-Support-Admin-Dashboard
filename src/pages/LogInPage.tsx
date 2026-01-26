@@ -6,7 +6,7 @@ import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, clearStatus } from "../store/authSlice";
-import { RootState } from "../store/store";
+import type{ RootState } from "../store/store";
 
 import Modal from "../components/Modal";
 
