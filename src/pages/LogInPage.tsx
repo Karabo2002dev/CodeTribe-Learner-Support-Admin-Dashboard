@@ -5,7 +5,7 @@ import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
 const LogInPage = () => {
   return (
-    <main className="flex flex-col min-h-screen items-center gap-16">
+    <main className="flex flex-col min-h-screen items-center justify-between gap-16">
       <section className="bg-green-500 py-4 flex items-center justify-center w-full">
         <img src="/src/assets/CodeTribe Logo.svg" alt="CodeTribe Logo" />
       </section>
@@ -66,7 +66,7 @@ const LogInPage = () => {
       </span>
       </div>
 
-      <footer className="bg-gray-100 py-4 w-full text-center text-gray-400 border-t border-green-500">
+      <footer className="bg-gray-100 pt-4 w-full text-center text-gray-400 border-t border-green-500">
         &copy; 2024 CodeTribe learner Support. All rights reserved.
       </footer>
     </main>
