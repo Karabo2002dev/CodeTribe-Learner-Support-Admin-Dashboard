@@ -1,7 +1,14 @@
+import { useState } from "react";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, clearStatus } from "../store/authSlice";
+import { RootState } from "../store/store";
+
+import Modal from "../components/Modal";
 
 const LogInPage = () => {
   return (
