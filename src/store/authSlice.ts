@@ -15,3 +15,15 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
+export const registerUser = createAsyncThunk(
+  "auth/register",
+  async (data: any, thunkAPI) => {
+    try {
+      const response = await axios.post(`${API_URL}/auth/register`, data);
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.response?.data || "Registration failed");
+    }
+  }
+);
