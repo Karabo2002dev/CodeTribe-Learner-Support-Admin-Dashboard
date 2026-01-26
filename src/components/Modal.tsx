@@ -15,10 +15,13 @@ const Modal = ({ message, type, onClose }: ModalProps) => {
 
         <p className="mt-2 text-gray-700">{message}</p>
 
-       
+        <button
+          onClick={onClose}
+          className="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+        >
+          OK
+        </button>
 
-       
-         
       </div>
     </div>
   );
