@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -18,13 +18,14 @@ import { registerUser, clearStatus } from "../store/authSlice";
 import type { RootState, AppDispatch } from "../store/store";
 
 import Modal from "../components/Modal";
-
+import { InputField } from "../components/InputField";
+import { Role } from "../types/role";
 import {
   validateRegisterForm,
   type RegisterFormValues,
 } from "../utils/registerValidation";
+import { useNavigate } from "react-router-dom";
 
-import { InputField } from "../components/InputField";
 
 const RegisterPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,25 +33,37 @@ const RegisterPage = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [role] = useState("facilitator");
+  const [role, setRole] = useState<Role>(Role.Facilitator);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const { loading, success, error } = useSelector(
-    (state: RootState) => state.auth,
+  const { loading, success, error, successMessage } = useSelector(
+    (state: RootState) => state.auth
   );
 
-  
+  const navigate = useNavigate();
+
+  useEffect(() => {
+  if (success) {
+    setTimeout(() => {
+      navigate("/login");
+      dispatch(clearStatus());
+    }, 1500);
+  }
+}, [success, navigate, dispatch]);
+
+
+
   const validateForm = (): boolean => {
     const values: RegisterFormValues = {
       fullName,
       email,
+      role,
       phoneNumber,
       password,
       confirmPassword,
@@ -74,7 +87,7 @@ const RegisterPage = () => {
 
   return (
     <main className="flex flex-col min-h-screen items-center justify-between gap-8">
-      
+
       <section className="bg-green-500 py-4 flex justify-center w-full">
         <img src="/src/assets/CodeTribe Logo.svg" alt="CodeTribe Logo" />
       </section>
@@ -89,7 +102,10 @@ const RegisterPage = () => {
       </div>
 
       <section className="flex flex-col items-center gap-6">
-        <button type="button" className="flex items-center gap-2 px-4 py-2 rounded-md bg-green-500 text-white">
+        <button
+          type="button"
+          className="flex items-center gap-2 px-4 py-2 rounded-md bg-green-500 text-white"
+        >
           <FontAwesomeIcon icon={faGoogle} />
           Sign Up with Google
         </button>
@@ -98,8 +114,9 @@ const RegisterPage = () => {
 
         <form
           onSubmit={handleRegister}
-          className="flex flex-col gap-4 w-80 border  border-green-500 rounded-lg p-6"
+          className="flex flex-col gap-4 w-80 border border-green-500 rounded-lg p-6"
         >
+
           <InputField
             label="Full Name"
             icon={faUser}
@@ -161,6 +178,24 @@ const RegisterPage = () => {
             <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
           )}
 
+          <label htmlFor="role" className="text-gray-500 mb-1">
+            Select Role
+          </label>
+          <select
+            id="role"
+            value={role}
+            onChange={(e) => setRole(e.target.value as Role)}
+            className="border border-green-500 rounded-md p-2"
+            required
+          >
+            {Object.values(Role).map((r) => (
+              <option key={r} value={r}>
+                {r.charAt(0).toUpperCase() + r.slice(1)}
+              </option>
+            ))}
+          </select>
+
+          {/* Terms */}
           <FormControlLabel
             control={
               <Checkbox
@@ -170,9 +205,7 @@ const RegisterPage = () => {
             }
             label="I agree to the Terms & Conditions"
           />
-          {errors.terms && (
-            <p className="text-red-500 text-xs">{errors.terms}</p>
-          )}
+          {errors.terms && <p className="text-red-500 text-xs">{errors.terms}</p>}
 
           <button
             disabled={loading}
@@ -184,28 +217,18 @@ const RegisterPage = () => {
         </form>
       </section>
 
-      {/* Footer */}
-      <footer className="text-sm text-gray-400 pb-6">
+      <footer className="text-sm text-gray-400 pb-6 text-center">
         Already have an account?{" "}
         <Link to="/login" className="text-green-500 hover:underline">
           Sign in
         </Link>
-        <div className="mt-2 text-center">
-          © {new Date().getFullYear()} CodeTribe Academy
-        </div>
+        <div className="mt-2">© {new Date().getFullYear()} CodeTribe Academy</div>
       </footer>
 
-      {/* Modals */}
-      {success && (
-        <Modal
-          type="success"
-          message="Account created successfully!"
-          onClose={handleCloseModal}
-        />
+      {success && successMessage && (
+        <Modal type="success" message={successMessage} onClose={handleCloseModal} />
       )}
-      {error && (
-        <Modal type="error" message={error} onClose={handleCloseModal} />
-      )}
+      {error && <Modal type="error" message={error} onClose={handleCloseModal} />}
     </main>
   );
 };

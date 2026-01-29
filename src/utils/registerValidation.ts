@@ -1,8 +1,11 @@
 import { emailRegex, phoneRegex, validatePassword } from "./validation";
 
+import { Role } from "../types/role";
+
 export interface RegisterFormValues {
   fullName: string;
   email: string;
+  role: Role;
   phoneNumber: string;
   password: string;
   confirmPassword: string;
@@ -42,6 +45,10 @@ export const validateRegisterForm = (
 
   if (values.password !== values.confirmPassword) {
     errors.confirmPassword = "Passwords do not match";
+  }
+
+  if (!Object.values(Role).includes(values.role)) {
+    errors.role = "Invalid role selected";
   }
 
   if (!values.agreeTerms) {
