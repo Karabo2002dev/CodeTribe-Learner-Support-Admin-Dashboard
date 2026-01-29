@@ -1,6 +1,6 @@
 import './App.css'
 import LogInPage from './pages/LogInPage'
-import { Route, Routes } from 'react-router'
+import { Route, Routes } from 'react-router-dom'
 import RegisterPage from './pages/RegisterPage'
 
 
