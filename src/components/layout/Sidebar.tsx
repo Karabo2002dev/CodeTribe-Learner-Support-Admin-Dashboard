@@ -1,53 +1,45 @@
-import {
-  Dashboard as DashboardIcon,
-  QuestionAnswer,
-  HelpOutline,
-  BarChart,
-  People,
-  Settings,
-  Logout,
-} from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
 
-const menuItems = [
-    { label: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-    { label: "Queries", icon: <QuestionAnswer />, path: "/dashboard/queries" },
-    { label: "FAQ’s", icon: <HelpOutline />, path: "/dashboard/faqs" },
-    { label: "Reports", icon: <BarChart />, path: "/dashboard/reports" },
-    { label: "Users", icon: <People />, path: "/dashboard/users" },
-    { label: "Settings", icon: <Settings />, path: "/dashboard/settings" }
-]
-
 export default function Sidebar() {
+    const linkClass = ({ isActive }: { isActive: boolean }) =>
+        `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition
+        ${isActive ? "bg-green-600 text-white" : "text-gray-600 hover:bg-gray-100"}`
+
     return (
-        <aside className="w-[280px] bg-white border-r border-gray-200 flex flex-col justify-between min-h-screen">
+        <aside className="w-64 min-h-screen bg-white border-r flex flex-col justify-between">
         
-            <nav className="px-6 py-8 flex flex-col gap-3">
-                {menuItems.map(({ label, icon, path }) => (
-                    <NavLink
-                        key={label}
-                        to={path}
-                        className={({ isActive }) =>
-                            `flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition
-                            ${
-                                isActive
-                                ? "bg-green-600 text-white"
-                                : "text-gray-600 hover:bg-gray-100"
-                            }`
-                        }
-                    >
-                        <span className="text-lg">{icon}</span>
-                        {label}
-                    </NavLink>
-                ))}
+            <nav className="p-4 space-y-2">
+                <NavLink to="/dashboard" className={linkClass}>
+                    Dashboard
+                </NavLink>
+
+                <NavLink to="/queries" className={linkClass}>
+                    Queries
+                </NavLink>
+
+                <NavLink to="/faqs" className={linkClass}>
+                    FAQ’s
+                </NavLink>
+
+                <NavLink to="/reports" className={linkClass}>
+                    Reports
+                </NavLink>
+
+                <NavLink to="/users" className={linkClass}>
+                    Users
+                </NavLink>
+
+                <NavLink to="/settings" className={linkClass}>
+                    Settings
+                </NavLink>
             </nav>
 
-            <div className="px-6 pb-6">
-                <button className="w-full flex items-center gap-4 px-4 py-3 rounded-xl bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition">
-                    <Logout />
+            <div className="p-4">
+                <button className="w-full flex items-center justify-center gap-2 bg-green-600 text-white py-3 rounded-xl text-sm">
                     Log Out
                 </button>
             </div>
+
         </aside>
     )
 }
