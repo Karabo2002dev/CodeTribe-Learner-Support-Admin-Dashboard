@@ -7,6 +7,7 @@ import DashboardLayout from "./components/layout/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import Queries from "./pages/Queries";
 import Faqs from "./pages/FaqsPage";
+import Reports from "./pages/ReportsPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/queries" element={<Queries />} />
         <Route path="/faqs" element={<Faqs />} />
+        <Route path="/reports" element={<Reports />} />
       </Route>
     </Routes>
   )
