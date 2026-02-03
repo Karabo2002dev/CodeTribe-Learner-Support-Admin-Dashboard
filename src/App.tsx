@@ -6,6 +6,7 @@ import DashboardLayout from "./components/layout/DashboardLayout";
 
 import Dashboard from "./pages/Dashboard";
 import Queries from "./pages/Queries";
+import Faqs from "./pages/FaqsPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route element={<DashboardLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/queries" element={<Queries />} />
+        <Route path="/faqs" element={<Faqs />} />
       </Route>
     </Routes>
   )
