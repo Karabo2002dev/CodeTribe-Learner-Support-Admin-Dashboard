@@ -1,30 +1,23 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import { CssBaseline } from "@mui/material";
+import { Routes, Route } from "react-router-dom";
 
 import LogInPage from "./pages/LogInPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardLayout from "./components/layout/DashboardLayout";
+
 import Dashboard from "./pages/Dashboard";
+import Queries from "./pages/Queries";
 
 function App() {
-  const isAuthenticated = true
-
   return (
-    <>
-      <CssBaseline />
+    <Routes>
+      <Route path="/" element={<RegisterPage />} />
+      <Route path="/login" element={<LogInPage />} />
 
-      <Routes>
-        <Route path="/" element={<RegisterPage />} />
-        <Route path="/login" element={<LogInPage />} />
-
-        <Route
-          path="/dashboard"
-          element={isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />}
-        >
-          <Route index element={<Dashboard />} />
-        </Route>
-      </Routes>
-    </>
+      <Route element={<DashboardLayout />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/queries" element={<Queries />} />
+      </Route>
+    </Routes>
   )
 }
 
