@@ -10,6 +10,7 @@ import Faqs from "./pages/FaqsPage";
 import Reports from "./pages/ReportsPage";
 import Settings from "./pages/SettingsPage";
 import Users from "./pages/UsersPage";
+import AssignedQueries from "./pages/AssignedQueries";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/reports" element={<Reports />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/users" element={<Users />} />
+        <Route path="/assingedQueries" element={<AssignedQueries />} />
       </Route>
     </Routes>
   )

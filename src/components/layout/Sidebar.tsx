@@ -29,6 +29,10 @@ export default function Sidebar() {
                     Users
                 </NavLink>
 
+                <NavLink to="/assingedQueries" className={linkClass}>
+                    Assigned Queries
+                </NavLink>
+
                 <NavLink to="/settings" className={linkClass}>
                     Settings
                 </NavLink>
