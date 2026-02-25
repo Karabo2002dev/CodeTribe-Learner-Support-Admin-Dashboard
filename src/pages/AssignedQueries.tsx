@@ -21,7 +21,7 @@ export default function AssignedQueries() {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(logout()); // ✅ use redux logout
+    dispatch(logout()); 
     navigate("/login");
   };
 
