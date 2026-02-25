@@ -4,8 +4,7 @@ import {
   MenuItem,
   Button,
   Typography,
-  FormControl,
-  InputLabel
+  FormControl
 } from "@mui/material";
 
 export default function NewLearnerQuery() {
