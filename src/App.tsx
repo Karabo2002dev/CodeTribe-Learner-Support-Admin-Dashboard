@@ -27,7 +27,7 @@ function RoleRoute({
   roles,
 }: {
   children: React.ReactNode;
-  roles: Role;
+  roles: Role[];
 }) {
   const user = useSelector((state: RootState) => state.auth.user);
 
@@ -67,16 +67,13 @@ function App() {
       <Route
         path="/facilitator"
         element={
-          <RoleRoute roles={Role.Facilitator}>
+          <RoleRoute roles={[Role.Facilitator]}>
             <DashboardLayout />
           </RoleRoute>
         }
       >
         <Route path="assigned-queries" element={<AssignedQueries />} />
-        <Route path="settings" element={<Settings />} />
       </Route>
-
-      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }
