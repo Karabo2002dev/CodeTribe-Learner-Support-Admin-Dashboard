@@ -48,14 +48,14 @@ function App() {
     <Routes>
       <Route path="/" element={<RegisterPage />} />
       <Route path="/login" element={<LogInPage />} />
-      <Route
-        path="/admin"
-        element={
-          <RoleRoute roles={[Role.Admin]}>
-            <DashboardLayout />
-          </RoleRoute>
-        }
-      >
+     <Route
+      path="/admin"
+      element={
+        <RoleRoute roles={[Role.Admin]}>
+          <DashboardLayout />
+        </RoleRoute>
+      }
+    >
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="queries" element={<Queries />} />
         <Route path="faqs" element={<Faqs />} />
