@@ -26,7 +26,7 @@ const LogInPage = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
 
-  const { loading, success, error, successMessage } = useSelector(
+  const { loading, success, error, successMessage, user } = useSelector(
     (state: RootState) => state.auth,
   );
 
@@ -48,13 +48,22 @@ const LogInPage = () => {
   const handleCloseModal = () => dispatch(clearStatus());
 
   useEffect(() => {
-    if (success) {
+    if (success && successMessage && user) {
       setTimeout(() => {
-        navigate("/dashboard");
+        // Redirect based on role
+        if (user.role === "ADMIN") {
+          console.log(user.role)
+          navigate("/admin/dashboard");
+        } else if (user.role === "FACILITATOR") {
+          navigate("/facilitator/assigned-queries");
+        } else {
+          navigate("/login"); // fallback if role is unknown
+        }
+
         dispatch(clearStatus());
-      }, 1500);
+      }, 500);
     }
-  }, [success, navigate, dispatch]);
+  }, [success, successMessage, user, navigate, dispatch]);
 
   return (
     <main className="flex flex-col min-h-screen justify-between items-center gap-16">

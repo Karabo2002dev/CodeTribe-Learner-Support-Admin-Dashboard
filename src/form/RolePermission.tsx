@@ -4,7 +4,6 @@ import {
   Select,
   MenuItem,
   FormControl,
-  InputLabel,
   Button,
   Checkbox,
   FormControlLabel,

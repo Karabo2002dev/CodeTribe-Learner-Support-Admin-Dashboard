@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import {
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import type { User, AuthResponse } from "../types/auth";
 import { Role } from "../types/role";
@@ -25,6 +23,7 @@ const initialState: AuthState = {
   successMessage: undefined,
 };
 
+
 export const loginUser = createAsyncThunk<
   { user: User; message: string },
   { email: string; password: string },
@@ -35,10 +34,10 @@ export const loginUser = createAsyncThunk<
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const token = await userCredential.user.getIdToken();
+      localStorage.setItem("auth_token", token);
 
       const { data } = await axios.post<AuthResponse>(`${API_URL}/auth/login`, { token });
-
-      return { user: data.user, message: data.message }; // include backend message
+      return { user: data.user, message: data.message };
     } catch (err: any) {
       if (err.response?.data?.message) return rejectWithValue(err.response.data.message);
       return rejectWithValue(err.message || "Invalid email or password");
@@ -54,7 +53,6 @@ export const registerUser = createAsyncThunk<
   "auth/register",
   async (payload, { rejectWithValue }) => {
     try {
-
       const { data } = await axios.post<AuthResponse>(`${API_URL}/auth/register`, {
         fullName: payload.fullName,
         phoneNumber: payload.phoneNumber,
@@ -71,6 +69,7 @@ export const registerUser = createAsyncThunk<
   }
 );
 
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -85,11 +84,18 @@ const authSlice = createSlice({
       state.success = false;
       state.error = null;
       state.successMessage = undefined;
+      localStorage.removeItem("user");
+    },
+    loadUserFromStorage: (state) => {
+      const savedUser = localStorage.getItem("user");
+      if (savedUser) {
+        state.user = JSON.parse(savedUser);
+      }
     },
   },
   extraReducers: (builder) => {
     builder
-
+      // Login
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -100,12 +106,14 @@ const authSlice = createSlice({
         state.success = true;
         state.user = action.payload.user;
         state.successMessage = action.payload.message;
+        localStorage.setItem("user", JSON.stringify(action.payload.user)); // persist user
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Login failed";
       })
 
+      // Register
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -116,6 +124,7 @@ const authSlice = createSlice({
         state.success = true;
         state.user = action.payload.user;
         state.successMessage = action.payload.message;
+        localStorage.setItem("user", JSON.stringify(action.payload.user)); // persist user
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -124,5 +133,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearStatus, logout } = authSlice.actions;
+export const { clearStatus, logout, loadUserFromStorage } = authSlice.actions;
 export default authSlice.reducer;
