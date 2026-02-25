@@ -1,13 +1,12 @@
 import { Role } from "./role";
 
-role: Role;
 
 export interface User {
   id: string;
   email: string;
   fullname: string;
   phoneNumber?: string;
-  role: "ADMIN" | "LEARNER" | "FACILITATOR";
+  role: Role;
   createdAt: string;
 }
 

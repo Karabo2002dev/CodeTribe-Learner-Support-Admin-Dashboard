@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
 
-
-
 interface AssignedQuery {
   id: string;
   phone: string;
@@ -18,20 +16,19 @@ export default function AssignedQueries() {
   const [queries, setQueries] = useState<AssignedQuery[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
-    const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = () => {
+    dispatch(logout()); // ✅ use redux logout
     navigate("/login");
-    };
+  };
 
   useEffect(() => {
     const fetchAssignedQueries = async () => {
       try {
         const response = await axios.get("/queries/assigned");
-
         setQueries(response.data.result);
       } catch (err: any) {
         setError("Failed to fetch assigned queries");
@@ -43,11 +40,6 @@ export default function AssignedQueries() {
 
     fetchAssignedQueries();
   }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
 
   if (loading) return <p>Loading assigned queries...</p>;
   if (error) return <p>{error}</p>;
@@ -62,7 +54,11 @@ export default function AssignedQueries() {
       {queries.length === 0 ? (
         <p>No assigned queries.</p>
       ) : (
-        <table border={1} cellPadding={8} style={{ width: "100%", marginTop: "20px" }}>
+        <table
+          border={1}
+          cellPadding={8}
+          style={{ width: "100%", marginTop: "20px" }}
+        >
           <thead>
             <tr>
               <th>Phone</th>
@@ -77,7 +73,9 @@ export default function AssignedQueries() {
                 <td>{query.phone}</td>
                 <td>{query.question}</td>
                 <td>{query.status}</td>
-                <td>{new Date(query.created_at).toLocaleString()}</td>
+                <td>
+                  {new Date(query.created_at).toLocaleString()}
+                </td>
               </tr>
             ))}
           </tbody>
