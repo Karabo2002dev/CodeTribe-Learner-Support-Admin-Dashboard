@@ -1,123 +1,78 @@
-import { Typography, Button, Chip, Paper } from "@mui/material";
+import { useEffect, useState } from "react";
+import axios from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
-const rows = [
-    {
-        name: "Karabo Kgaphola",
-        question: "Schedules",
-        status: "Open",
-        date: "01 January 2026"
-    },
-    {
-        name: "Zwivhuya Sagida",
-        question: "Assessments",
-        status: "Resolved",
-        date: "01 January 2026"
-    },
-    {
-        name: "Mpho Khaphathe",
-        question: "Assessments",
-        status: "Open",
-        date: "28 November 2025"
-    },
-    {
-        name: "Motikoni Mohofe",
-        question: "Support Service",
-        status: "Resolved",
-        date: "01 December 2025"
-    },
-    {
-        name: "Siyanda Mhlongo",
-        question: "Support Service",
-        status: "Open",
-        date: "05 December 2025"
-    }
-]
+interface AssignedQuery {
+  id: string;
+  phone: string;
+  question: string;
+  status: string;
+  created_at: string;
+}
 
 export default function AssignedQueries() {
-    return (
-        <div className="min-h-screen bg-white px-16 py-10">
-            <div className="mb-12">
-                <Typography variant="h5" className="font-semibold text-black">
-                    Assigned Queries
-                </Typography>
-                <Typography variant="body2" className="text-gray-500 mt-2">
-                    Queries awaiting your response
-                </Typography>
-            </div>
+  const [queries, setQueries] = useState<AssignedQuery[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-            <Paper elevation={0} className="rounded-2xl border border-gray-200 shadow-lg p-6 bg-white">
-                <div className="overflow-hidden rounded-xl border border-gray-200">
+  useEffect(() => {
+    const fetchAssignedQueries = async () => {
+      try {
+        const response = await axios.get("/queries/assigned");
 
-                    <div className="grid grid-cols-5 bg-[#cfe6dc] text-gray-700 font-semibold text-sm px-8 py-4">
-                        <div>Phone Number</div>
-                        <div>Question</div>
-                        <div>Status</div>
-                        <div>Date</div>
-                        <div className="text-right">Action</div>
-                    </div>
+        setQueries(response.data.result);
+      } catch (err: any) {
+        setError("Failed to fetch assigned queries");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-                    {rows.map((row, index) => (
-                        <div
-                            key={index}
-                            className="grid grid-cols-5 items-center px-8 py-6 border-b border-[#1b9e77] last:border-b-0 bg-white transition-colors duration-200 hover:bg-[#f3faf7]"
-                        >
-                            <Typography className="text-gray-800 font-medium">
-                                {row.name}
-                            </Typography>
+    fetchAssignedQueries();
+  }, []);
 
-                            <Typography className="text-gray-600">
-                                {row.question}
-                            </Typography>
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
 
-                            <div>
-                                {row.status === "Open" ? (
-                                    <Chip
-                                        label="Open"
-                                        size="small"
-                                        sx={{
-                                            backgroundColor: "#b7e4c7",
-                                            color: "#1b5e20",
-                                            fontWeight: 600,
-                                            borderRadius: "999px",
-                                            px: 1
-                                        }}
-                                    />
-                                ) : (
-                                    <Typography className="text-gray-600 font-medium">
-                                        Resolved
-                                    </Typography>
-                                )}
-                            </div>
+  if (loading) return <p>Loading assigned queries...</p>;
+  if (error) return <p>{error}</p>;
 
-                            <Typography className="text-gray-600">
-                                {row.date}
-                            </Typography>
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <h2>Assigned Queries</h2>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
 
-                            <div className="flex justify-end">
-                                <Button
-                                    variant="contained"
-                                    disableElevation
-                                    sx={{
-                                        backgroundColor: "#0f9d58",
-                                        "&:hover": { backgroundColor: "#0c7c45" },
-                                        borderRadius: "14px",
-                                        textTransform: "none",
-                                        px: 3,
-                                        py: 1,
-                                        fontWeight: 500
-                                    }}
-                                >
-                                    View
-                                </Button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </Paper>
-
-            <div className="mt-16 border-t border-[#1b9e77] pt-6 text-center text-sm text-gray-500">
-                © 2026 CodeTribe Learner Support. All rights reserved
-            </div>
-        </div>
-    )
+      {queries.length === 0 ? (
+        <p>No assigned queries.</p>
+      ) : (
+        <table border={1} cellPadding={8} style={{ width: "100%", marginTop: "20px" }}>
+          <thead>
+            <tr>
+              <th>Phone</th>
+              <th>Question</th>
+              <th>Status</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            {queries.map((query) => (
+              <tr key={query.id}>
+                <td>{query.phone}</td>
+                <td>{query.question}</td>
+                <td>{query.status}</td>
+                <td>{new Date(query.created_at).toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
 }
