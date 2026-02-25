@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/authSlice";
+
+const dispatch = useDispatch();
+
+const handleLogout = () => {
+  dispatch(logout());
+  navigate("/login");
+};
 
 interface AssignedQuery {
   id: string;
