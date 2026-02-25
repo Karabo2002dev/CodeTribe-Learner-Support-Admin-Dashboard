@@ -4,12 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
 
-const dispatch = useDispatch();
 
-const handleLogout = () => {
-  dispatch(logout());
-  navigate("/login");
-};
 
 interface AssignedQuery {
   id: string;
@@ -24,6 +19,13 @@ export default function AssignedQueries() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+    const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+    };
 
   useEffect(() => {
     const fetchAssignedQueries = async () => {
