@@ -51,7 +51,7 @@ function App() {
       <Route
         path="/admin"
         element={
-          <RoleRoute roles={Role.Admin}>
+          <RoleRoute roles={[Role.Admin]}>
             <DashboardLayout />
           </RoleRoute>
         }
