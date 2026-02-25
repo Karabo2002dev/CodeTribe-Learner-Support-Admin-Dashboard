@@ -1,9 +1,12 @@
+import { Role } from "./role";
+
+
 export interface User {
   id: string;
   email: string;
   fullname: string;
   phoneNumber?: string;
-  role: "ADMIN" | "LEARNER" | "FACILITATOR";
+  role: Role;
   createdAt: string;
 }
 

@@ -73,26 +73,29 @@ export const registerUser = createAsyncThunk<
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    clearStatus: (state) => {
-      state.error = null;
-      state.success = false;
-      state.successMessage = undefined;
-    },
-    logout: (state) => {
-      state.user = null;
-      state.success = false;
-      state.error = null;
-      state.successMessage = undefined;
-      localStorage.removeItem("user");
-    },
-    loadUserFromStorage: (state) => {
-      const savedUser = localStorage.getItem("user");
-      if (savedUser) {
-        state.user = JSON.parse(savedUser);
-      }
-    },
+ reducers: {
+  clearStatus: (state) => {
+    state.error = null;
+    state.success = false;
+    state.successMessage = undefined;
   },
+  logout: (state) => {
+    state.user = null;
+    state.loading = false;
+    state.success = false;
+    state.error = null;
+    state.successMessage = undefined;
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("auth_token");
+  },
+  loadUserFromStorage: (state) => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      state.user = JSON.parse(savedUser);
+    }
+  },
+},
   extraReducers: (builder) => {
     builder
       // Login

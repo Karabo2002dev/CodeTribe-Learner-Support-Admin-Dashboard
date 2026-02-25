@@ -27,12 +27,12 @@ function RoleRoute({
   roles,
 }: {
   children: React.ReactNode;
-  roles: Role;
+  roles: Role[];
 }) {
   const user = useSelector((state: RootState) => state.auth.user);
 
   if (!user) return <Navigate to="/login" replace />;
-  if (!roles.includes(user.role)) return <Navigate to="/login" replace />;
+  if (!roles.includes(user.role)) return <Navigate to="/" replace />;
 
   return children;
 }
@@ -48,14 +48,14 @@ function App() {
     <Routes>
       <Route path="/" element={<RegisterPage />} />
       <Route path="/login" element={<LogInPage />} />
-      <Route
-        path="/admin"
-        element={
-          <RoleRoute roles={Role.Admin}>
-            <DashboardLayout />
-          </RoleRoute>
-        }
-      >
+     <Route
+      path="/admin"
+      element={
+        <RoleRoute roles={[Role.Admin]}>
+          <DashboardLayout />
+        </RoleRoute>
+      }
+    >
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="queries" element={<Queries />} />
         <Route path="faqs" element={<Faqs />} />
@@ -67,16 +67,13 @@ function App() {
       <Route
         path="/facilitator"
         element={
-          <RoleRoute roles={Role.Facilitator}>
+          <RoleRoute roles={[Role.Facilitator]}>
             <DashboardLayout />
           </RoleRoute>
         }
       >
         <Route path="assigned-queries" element={<AssignedQueries />} />
-        <Route path="settings" element={<Settings />} />
       </Route>
-
-      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }
