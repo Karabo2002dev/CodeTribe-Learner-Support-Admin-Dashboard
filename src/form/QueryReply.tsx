@@ -1,138 +1,119 @@
-import { Typography, TextField, Button, Paper } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Chip,
+} from "@mui/material";
+import { useState } from "react";
+import { respondToQuery } from "../services/queryServices";
+import FeedbackPopup from "../components/FeedbackPopUp";
 
-export default function QueryDetails() {
-    return (
-        <div className="min-h-screen bg-[#f5f5f5] p-10">
-            <Paper
-                elevation={0}
-                className="rounded-3xl bg-white p-12 shadow-sm"
-            >
-                <Typography variant="h5" className="font-semibold text-black">
-                    Query Details
-                </Typography>
+interface Props {
+  open: boolean;
+  onClose: () => void;
+  query: {
+    id: string;
+    phone: string;
+    question: string;
+    status: string;
+  };
+}
 
-                <Typography className="text-gray-500 mt-2">
-                    Select a staff member an an internal note for this query
-                </Typography>
+export default function QueryReply({ open, onClose, query }: Props) {
+  const [responseText, setResponseText] = useState("");
+  const [loading, setLoading] = useState(false);
 
-                <div className="mt-8 space-y-3">
-                    <Typography className="font-semibold text-gray-800">
-                        Query Info
-                    </Typography>
+  const [popup, setPopup] = useState({
+    open: false,
+    message: "",
+    severity: "success" as "success" | "error",
+  });
 
-                    <Typography>
-                        <span className="font-semibold">Phone Number:</span>{" "}
-                        <span className="text-gray-600">0815252702</span>
-                    </Typography>
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
 
-                    <Typography>
-                        <span className="font-semibold">Query ID:</span>{" "}
-                        <span className="text-gray-600">query123</span>
-                    </Typography>
+      const res = await respondToQuery(query.id, responseText);
 
-                    <Typography>
-                        <span className="font-semibold">Status:</span>{" "}
-                        <span className="text-orange-600 font-medium">
-                            Escalated
-                        </span>
-                    </Typography>
+      if (res.success) {
+        setPopup({
+          open: true,
+          message: res.message,
+          severity: "success",
+        });
 
-                    <Typography>
-                        <span className="font-semibold">Date :</span>{" "}
-                        <span className="text-gray-800">12 Jan 2026</span>
-                    </Typography>
+        setResponseText("");
+        onClose();
+      }
+    } catch (err: any) {
+      setPopup({
+        open: true,
+        message:
+          err?.response?.data?.message ||
+          "Failed to send response",
+        severity: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                    <Typography>
-                        <span className="font-semibold">Question:</span>{" "}
-                        <span className="text-gray-600">
-                            Can I speak to an agent.
-                        </span>
-                    </Typography>
-                </div>
+  return (
+    <>
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+        <DialogTitle>
+          Respond to Query
+          <Chip
+            label={query.status}
+            size="small"
+            sx={{ ml: 2 }}
+          />
+        </DialogTitle>
 
-                <div className="mt-10">
-                    <Typography variant="h6" className="font-semibold mb-4">
-                        Respond To Query
-                    </Typography>
+        <DialogContent className="space-y-4">
+          <div>
+            <p className="text-sm text-gray-500">Phone</p>
+            <p className="font-medium">{query.phone}</p>
+          </div>
 
-                    <TextField
-                        fullWidth
-                        multiline
-                        rows={6}
-                        placeholder="Type your response to the learner...."
-                        sx={{
-                            "& .MuiOutlinedInput-root": {
-                                borderRadius: "14px",
-                                "& fieldset": {
-                                borderColor: "#16a34a"
-                                },
-                                "&:hover fieldset": {
-                                borderColor: "#15803d"
-                                },
-                                "&.Mui-focused fieldset": {
-                                borderColor: "#15803d"
-                                }
-                            }
-                        }}
-                    />
-                </div>
+          <div>
+            <p className="text-sm text-gray-500">Question</p>
+            <p className="text-gray-800">{query.question}</p>
+          </div>
 
-                <div className="border-t border-gray-300 mt-8 pt-8 flex justify-end gap-6">
-                    <Button
-                        variant="contained"
-                        disableElevation
-                        sx={{
-                            backgroundColor: "#b7e4c7",
-                            color: "#065f46",
-                            borderRadius: "18px",
-                            textTransform: "none",
-                            px: 4,
-                            py: 1.2,
-                            "&:hover": {
-                                backgroundColor: "#95d5b2"
-                            }
-                        }}
-                    >
-                        Cancel
-                    </Button>
+          <TextField
+            label="Your Response"
+            multiline
+            rows={4}
+            fullWidth
+            value={responseText}
+            onChange={(e) => setResponseText(e.target.value)}
+          />
+        </DialogContent>
 
-                    <Button
-                        variant="contained"
-                        disableElevation
-                        sx={{
-                            backgroundColor: "#95d5b2",
-                            color: "#064e3b",
-                            borderRadius: "18px",
-                            textTransform: "none",
-                            px: 4,
-                            py: 1.2,
-                            "&:hover": {
-                                backgroundColor: "#74c69d",
-                            }
-                        }}
-                    >
-                        Save Draft
-                    </Button>
+        <DialogActions>
+          <Button onClick={onClose} disabled={loading}>
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={loading || !responseText}
+          >
+            {loading ? "Sending..." : "Send Response"}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-                    <Button
-                        variant="contained"
-                        disableElevation
-                        sx={{
-                        backgroundColor: "#0f9d58",
-                        borderRadius: "18px",
-                        textTransform: "none",
-                        px: 5,
-                        py: 1.2,
-                        fontWeight: 500,
-                        "&:hover": {
-                            backgroundColor: "#0c7c45"
-                        }
-                        }}
-                    >
-                        Send
-                    </Button>
-                </div>
-            </Paper>
-        </div>
-    )
+      <FeedbackPopup
+        open={popup.open}
+        message={popup.message}
+        severity={popup.severity}
+        onClose={() => setPopup({ ...popup, open: false })}
+      />
+    </>
+  );
 }

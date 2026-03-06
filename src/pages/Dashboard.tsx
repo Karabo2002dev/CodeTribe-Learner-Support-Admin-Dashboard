@@ -10,7 +10,7 @@ export default function Dashboard() {
             </h1>
 
             <DashboardCards />
-            <DailyQueryChart month="2026-02" />
+            <DailyQueryChart />
             <RecentQueriesTable />
         </div>
     )

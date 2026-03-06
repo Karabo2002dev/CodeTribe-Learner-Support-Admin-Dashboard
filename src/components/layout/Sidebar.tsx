@@ -13,7 +13,7 @@ export default function Sidebar() {
   const adminLinks = [
     { to: "dashboard", label: "Dashboard" },
     { to: "queries", label: "Queries" },
-    { to: "faqs", label: "FAQ’s" },
+    { to: "documents", label: "Documents" },
     { to: "reports", label: "Reports" },
     { to: "users", label: "Users" },
     { to: "settings", label: "Settings" },
