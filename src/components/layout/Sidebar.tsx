@@ -17,6 +17,7 @@ export default function Sidebar() {
     { to: "reports", label: "Reports" },
     { to: "users", label: "Users" },
     { to: "settings", label: "Settings" },
+    {to: "ContactUs", label:"ContactUs"},
   ];
 
   const facilitatorLinks = [

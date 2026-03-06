@@ -16,6 +16,7 @@ import AdminDocEditor from "./pages/AdminDocEditor";
 import Reports from "./pages/ReportsPage";
 import Settings from "./pages/SettingsPage";
 import Users from "./pages/UsersPage";
+import ContactUs from "./pages/ContactUs";
 
 import AssignedQueries from "./pages/AssignedQueries";
 
@@ -62,6 +63,7 @@ function App() {
         <Route path="reports" element={<Reports />} />
         <Route path="users" element={<Users />} />
         <Route path="settings" element={<Settings />} />
+         <Route path="ContactUs" element={<ContactUs />} />
       </Route>
 
       <Route
