@@ -12,7 +12,7 @@ import DashboardLayout from "./components/layout/DashboardLayout";
 
 import Dashboard from "./pages/Dashboard";
 import Queries from "./pages/Queries";
-import Faqs from "./pages/FaqsPage";
+import AdminDocEditor from "./pages/AdminDocEditor";
 import Reports from "./pages/ReportsPage";
 import Settings from "./pages/SettingsPage";
 import Users from "./pages/UsersPage";
@@ -58,7 +58,7 @@ function App() {
     >
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="queries" element={<Queries />} />
-        <Route path="faqs" element={<Faqs />} />
+        <Route path="documents" element={<AdminDocEditor />} />
         <Route path="reports" element={<Reports />} />
         <Route path="users" element={<Users />} />
         <Route path="settings" element={<Settings />} />

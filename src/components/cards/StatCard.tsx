@@ -21,8 +21,9 @@ export default function StatCard() {
     async function fetchStats() {
       try {
         const { data } = await api.get("/queries/stats");
+         console.log("Fetched stats:", data);
         setStats(data.data);
-        console.log(data.data)
+       
       } catch (error) {
         console.error("Failed to load stats", error);
       } finally {

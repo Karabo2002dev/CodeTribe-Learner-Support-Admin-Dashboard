@@ -87,35 +87,6 @@ const ReportsPage = () => {
                     </div>
                 </CardContent>
             </Card>
-
-            <Card className="rounded-xl">
-                <CardContent>
-                    <table className="w-full text-sm">
-                        <thead className="bg-green-50">
-                            <tr>
-                                <th className="text-left p-3">Name</th>
-                                <th className="text-left p-3">Email</th>
-                                <th className="text-left p-3">Role</th>
-                                <th className="text-left p-3">Status</th>
-                                <th className="text-left p-3">Last Active</th>
-                                <th className="text-left p-3">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {[...Array(5)].map((_, i) => (
-                                <tr key={i} className="border-b">
-                                    <td className="p-3">Name</td>
-                                    <td className="p-3">Email</td>
-                                    <td className="p-3">Role</td>
-                                    <td className="p-3 text-green-600 font-medium">Status</td>
-                                    <td className="p-3">Last Active</td>
-                                    <td className="p-3">•••</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </CardContent>
-            </Card>
         </div>
     )
 }
