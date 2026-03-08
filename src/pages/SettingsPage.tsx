@@ -272,7 +272,7 @@ export default function SettingsPage() {
                   <Stack direction="row" spacing={1.5} alignItems="center">
                     <PhoneIcon sx={{ color: "#64748b" }} />
                     <Typography sx={{ color: "#334155" }}>
-                      {user?.phoneNumber}
+                      {user?.phone_number}
                     </Typography>
                   </Stack>
 
