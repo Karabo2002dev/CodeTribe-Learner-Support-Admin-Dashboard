@@ -127,6 +127,62 @@ function hasValue(v?: string) {
   return Boolean(v && v.trim().length > 0);
 }
 
+const ui = {
+  heroBg: {
+    background:
+      "linear-gradient(135deg, #16a34a 0%, #22c55e 45%, #4ade80 100%)",
+  },
+  heroButtonPrimary: {
+    bgcolor: "#ffffff",
+    color: "#166534",
+    px: 3,
+    py: 1.2,
+    borderRadius: "14px",
+    fontWeight: 700,
+    textTransform: "none",
+    boxShadow: "none",
+    "&:hover": {
+      bgcolor: "#f8fafc",
+      boxShadow: "none",
+    },
+  },
+  heroButtonOutline: {
+    color: "white",
+    borderColor: "rgba(255,255,255,0.45)",
+    px: 3,
+    py: 1.2,
+    borderRadius: "14px",
+    fontWeight: 700,
+    textTransform: "none",
+    "&:hover": {
+      borderColor: "#ffffff",
+      bgcolor: "rgba(255,255,255,0.08)",
+    },
+  },
+  card: {
+    height: "100%",
+    borderRadius: "24px",
+    border: "1px solid #e5e7eb",
+    overflow: "hidden",
+    backgroundColor: "#ffffff",
+    boxShadow: "0 1px 2px rgba(16,24,40,0.04)",
+    transition: "transform 0.25s ease, box-shadow 0.25s ease",
+    "&:hover": {
+      transform: "translateY(-4px)",
+      boxShadow: "0 12px 28px rgba(15, 23, 42, 0.08)",
+    },
+  },
+  socialButton: {
+    bgcolor: "#f8fafc",
+    border: "1px solid #e2e8f0",
+    transition: "all 0.2s ease",
+    "&:hover": {
+      bgcolor: "#f1f5f9",
+      transform: "translateY(-1px)",
+    },
+  },
+};
+
 function SocialIcon({
   href,
   icon,
@@ -147,15 +203,7 @@ function SocialIcon({
           target={!disabled ? "_blank" : undefined}
           rel={!disabled ? "noopener noreferrer" : undefined}
           disabled={disabled}
-          sx={{
-            bgcolor: "#f1f5f9",
-            border: "1px solid #e2e8f0",
-            transition: "all 0.25s ease",
-            "&:hover": {
-              bgcolor: "#e2e8f0",
-              transform: "translateY(-2px)",
-            },
-          }}
+          sx={ui.socialButton}
         >
           {icon}
         </IconButton>
@@ -172,31 +220,10 @@ function TeamCard({
   single?: boolean;
 }) {
   return (
-    <Card
-      elevation={0}
-      sx={{
-        height: "100%",
-        borderRadius: "30px",
-        border: "1px solid #dbe7dd",
-        overflow: "hidden",
-        background:
-          "linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(249,250,251,1) 100%)",
-        boxShadow: "0 18px 45px rgba(15, 23, 42, 0.08)",
-        transition: "all 0.35s ease",
-        animation: "fadeInUp 0.7s ease both",
-        "@keyframes fadeInUp": {
-          "0%": { opacity: 0, transform: "translateY(18px)" },
-          "100%": { opacity: 1, transform: "translateY(0)" },
-        },
-        "&:hover": {
-          transform: "translateY(-8px)",
-          boxShadow: "0 24px 60px rgba(15, 23, 42, 0.14)",
-        },
-      }}
-    >
+    <Card elevation={0} sx={ui.card}>
       <Box
         sx={{
-          height: single ? 145 : 120,
+          height: single ? 140 : 110,
           background: `linear-gradient(135deg, ${member.accent} 0%, #86efac 100%)`,
           position: "relative",
         }}
@@ -204,10 +231,10 @@ function TeamCard({
         <Box
           sx={{
             position: "absolute",
-            right: -18,
-            top: -10,
-            width: 110,
-            height: 110,
+            right: -16,
+            top: -18,
+            width: 100,
+            height: 100,
             borderRadius: "50%",
             bgcolor: "rgba(255,255,255,0.12)",
           }}
@@ -215,8 +242,8 @@ function TeamCard({
         <Box
           sx={{
             position: "absolute",
-            left: 18,
-            bottom: 14,
+            left: 16,
+            bottom: 12,
             display: "flex",
             alignItems: "center",
             gap: 1,
@@ -231,15 +258,15 @@ function TeamCard({
       </Box>
 
       <CardContent sx={{ px: 3, pb: 3.5, pt: 0 }}>
-        <Stack alignItems="center" sx={{ mt: -6 }}>
+        <Stack alignItems="center" sx={{ mt: -5.5 }}>
           <Avatar
             src={member.image}
             alt={member.name}
             sx={{
-              width: single ? 126 : 116,
-              height: single ? 126 : 116,
+              width: single ? 120 : 108,
+              height: single ? 120 : 108,
               border: "4px solid white",
-              boxShadow: "0 12px 28px rgba(0,0,0,0.16)",
+              boxShadow: "0 8px 22px rgba(15, 23, 42, 0.12)",
             }}
           />
         </Stack>
@@ -247,7 +274,7 @@ function TeamCard({
         <Box textAlign="center" sx={{ mt: 2 }}>
           <Typography
             variant={single ? "h5" : "h6"}
-            sx={{ fontWeight: 900, color: "#0f172a" }}
+            sx={{ fontWeight: 800, color: "#0f172a" }}
           >
             {member.name}
           </Typography>
@@ -255,10 +282,10 @@ function TeamCard({
           <Typography
             sx={{
               color: member.accent,
-              fontWeight: 800,
+              fontWeight: 700,
               mt: 0.5,
               mb: 1.5,
-              fontSize: single ? "1rem" : "0.98rem",
+              fontSize: single ? "1rem" : "0.95rem",
             }}
           >
             {member.role}
@@ -267,10 +294,10 @@ function TeamCard({
           <Typography
             sx={{
               color: "#64748b",
-              lineHeight: 1.9,
+              lineHeight: 1.8,
               fontSize: single ? "1rem" : "0.95rem",
-              minHeight: single ? "unset" : 155,
-              maxWidth: single ? "900px" : "unset",
+              minHeight: single ? "unset" : 148,
+              maxWidth: single ? "860px" : "unset",
               mx: "auto",
             }}
           >
@@ -311,7 +338,7 @@ function TeamCard({
             mb: 2,
             py: 1.3,
             px: 2,
-            borderRadius: "16px",
+            borderRadius: "14px",
             bgcolor: "#f8fafc",
             border: "1px solid #e2e8f0",
           }}
@@ -319,9 +346,8 @@ function TeamCard({
           <PhoneIcon sx={{ color: member.accent, fontSize: 20 }} />
           <Typography
             sx={{
-              fontWeight: 800,
+              fontWeight: 700,
               color: "#0f172a",
-              letterSpacing: "0.2px",
             }}
           >
             {member.phone}
@@ -331,7 +357,7 @@ function TeamCard({
         <Stack
           direction="row"
           justifyContent="center"
-          spacing={1.4}
+          spacing={1.3}
           sx={{ mt: 1.5 }}
         >
           <SocialIcon
@@ -394,12 +420,7 @@ function FloatingContactBar() {
               height: 54,
               bgcolor: "#22c55e",
               color: "white",
-              boxShadow: "0 12px 28px rgba(34, 197, 94, 0.35)",
-              animation: "floatPulse 2.5s ease-in-out infinite",
-              "@keyframes floatPulse": {
-                "0%, 100%": { transform: "translateY(0)", boxShadow: "0 12px 28px rgba(34, 197, 94, 0.35)" },
-                "50%": { transform: "translateY(-4px)", boxShadow: "0 16px 34px rgba(34, 197, 94, 0.5)" },
-              },
+              boxShadow: "0 12px 24px rgba(34, 197, 94, 0.28)",
               "&:hover": { bgcolor: "#16a34a" },
             }}
           >
@@ -412,11 +433,11 @@ function FloatingContactBar() {
             component="a"
             href={toTel("082 705 6724")}
             sx={{
-              width: 48,
-              height: 48,
+              width: 46,
+              height: 46,
               bgcolor: "white",
-              border: "1px solid #dbe7dd",
-              boxShadow: "0 10px 24px rgba(15, 23, 42, 0.12)",
+              border: "1px solid #e2e8f0",
+              boxShadow: "0 8px 18px rgba(15, 23, 42, 0.1)",
               "&:hover": { bgcolor: "#f8fafc" },
             }}
           >
@@ -429,11 +450,11 @@ function FloatingContactBar() {
             component="a"
             href="#top"
             sx={{
-              width: 48,
-              height: 48,
+              width: 46,
+              height: 46,
               bgcolor: "white",
-              border: "1px solid #dbe7dd",
-              boxShadow: "0 10px 24px rgba(15, 23, 42, 0.12)",
+              border: "1px solid #e2e8f0",
+              boxShadow: "0 8px 18px rgba(15, 23, 42, 0.1)",
               "&:hover": { bgcolor: "#f8fafc" },
             }}
           >
@@ -447,18 +468,17 @@ function FloatingContactBar() {
 
 export default function ContactUs() {
   return (
-    <Box id="top" className="min-h-screen bg-slate-50">
-      {/* Hero */}
-      <Box className="relative overflow-hidden bg-green-500">
+    <Box id="top" sx={{ minHeight: "100vh", bgcolor: "#f8fafc" }}>
+      <Box sx={{ ...ui.heroBg, position: "relative", overflow: "hidden" }}>
         <Container maxWidth="lg">
-          <Box className="py-16 md:py-24 relative z-10">
+          <Box sx={{ py: { xs: 10, md: 14 }, position: "relative", zIndex: 1 }}>
             <Chip
               icon={<Groups2OutlinedIcon style={{ color: "white" }} />}
               label="Our Professional Team"
               sx={{
                 mb: 3,
                 color: "white",
-                bgcolor: "rgba(255,255,255,0.15)",
+                bgcolor: "rgba(255,255,255,0.14)",
                 border: "1px solid rgba(255,255,255,0.2)",
                 fontWeight: 700,
               }}
@@ -481,15 +501,15 @@ export default function ContactUs() {
             <Typography
               sx={{
                 color: "rgba(255,255,255,0.95)",
-                fontSize: { xs: "1rem", md: "1.15rem" },
-                lineHeight: 1.95,
-                maxWidth: "790px",
+                fontSize: { xs: "1rem", md: "1.1rem" },
+                lineHeight: 1.9,
+                maxWidth: "780px",
                 mb: 4,
               }}
             >
-              We are a collaborative team of professionals focused on building
-              thoughtful, reliable, and modern digital solutions. Our strengths
-              cover technical leadership, full stack engineering, frontend
+              We are a collaborative team focused on building thoughtful,
+              reliable, and modern digital solutions. Our strengths cover
+              technical leadership, full stack engineering, frontend
               development, backend architecture, and user interface design.
             </Typography>
 
@@ -498,18 +518,7 @@ export default function ContactUs() {
                 variant="contained"
                 endIcon={<ArrowForwardIcon />}
                 href="#team"
-                sx={{
-                  bgcolor: "white",
-                  color: "#16a34a",
-                  px: 3,
-                  py: 1.2,
-                  borderRadius: "16px",
-                  fontWeight: 800,
-                  boxShadow: "0 10px 30px rgba(0,0,0,0.12)",
-                  "&:hover": {
-                    bgcolor: "#f8fafc",
-                  },
-                }}
+                sx={ui.heroButtonPrimary}
               >
                 Meet the Team
               </Button>
@@ -517,18 +526,7 @@ export default function ContactUs() {
               <Button
                 variant="outlined"
                 href="#contact-info"
-                sx={{
-                  color: "white",
-                  borderColor: "rgba(255,255,255,0.45)",
-                  px: 3,
-                  py: 1.2,
-                  borderRadius: "16px",
-                  fontWeight: 700,
-                  "&:hover": {
-                    borderColor: "white",
-                    bgcolor: "rgba(255,255,255,0.08)",
-                  },
-                }}
+                sx={ui.heroButtonOutline}
               >
                 Contact Details
               </Button>
@@ -536,16 +534,35 @@ export default function ContactUs() {
           </Box>
         </Container>
 
-        <Box className="absolute -top-10 -right-10 w-56 h-56 rounded-full bg-white/10" />
-        <Box className="absolute -bottom-12 left-8 w-40 h-40 rounded-full bg-white/10" />
+        <Box
+          sx={{
+            position: "absolute",
+            right: -40,
+            top: -30,
+            width: 220,
+            height: 220,
+            borderRadius: "50%",
+            bgcolor: "rgba(255,255,255,0.08)",
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            left: 28,
+            bottom: -40,
+            width: 150,
+            height: 150,
+            borderRadius: "50%",
+            bgcolor: "rgba(255,255,255,0.08)",
+          }}
+        />
       </Box>
 
-      <Container maxWidth="lg" className="py-12 md:py-16">
-        {/* Intro */}
-        <Box className="mb-10" id="team">
+      <Container maxWidth="lg" sx={{ py: { xs: 8, md: 10 } }}>
+        <Box sx={{ mb: 6 }} id="team">
           <Typography
             variant="h4"
-            sx={{ fontWeight: 900, color: "#0f172a", mb: 1 }}
+            sx={{ fontWeight: 800, color: "#0f172a", mb: 1 }}
           >
             Meet Our Team
           </Typography>
@@ -553,7 +570,7 @@ export default function ContactUs() {
             sx={{
               color: "#475569",
               maxWidth: "820px",
-              lineHeight: 1.9,
+              lineHeight: 1.85,
             }}
           >
             Our team combines technical strategy, creative design, and software
@@ -563,50 +580,46 @@ export default function ContactUs() {
           </Typography>
         </Box>
 
-        {/* Row 1 */}
         <Grid container spacing={3} sx={{ mb: 3 }}>
           {firstRow.map((member) => (
-            <Grid item xs={12} md={6} key={member.name}>
+            <Grid  size={{ xs: 12, md: 6 }} key={member.name}>
               <TeamCard member={member} />
             </Grid>
           ))}
         </Grid>
 
-        {/* Row 2 */}
         <Grid container spacing={3} sx={{ mb: 3 }}>
           {secondRow.map((member) => (
-            <Grid item xs={12} md={6} key={member.name}>
+            <Grid  size={{ xs: 12, md: 6 }} key={member.name}>
               <TeamCard member={member} />
             </Grid>
           ))}
         </Grid>
 
-        {/* Row 3 */}
         <Grid container spacing={3}>
           {lastRow.map((member) => (
-            <Grid item xs={12} key={member.name}>
+            <Grid  size={{ xs: 12, md: 6 }} key={member.name}>
               <TeamCard member={member} single />
             </Grid>
           ))}
         </Grid>
 
-        {/* Contact Summary */}
-        <Box id="contact-info" className="mt-14 md:mt-16">
+        <Box id="contact-info" sx={{ mt: { xs: 8, md: 10 } }}>
           <Card
             elevation={0}
             sx={{
-              borderRadius: "32px",
+              borderRadius: "24px",
               overflow: "hidden",
-              border: "1px solid #dcfce7",
-              boxShadow: "0 18px 40px rgba(22, 163, 74, 0.08)",
+              border: "1px solid #e5e7eb",
+              boxShadow: "0 1px 2px rgba(16,24,40,0.04)",
             }}
           >
             <Grid container>
-              <Grid item xs={12} md={7}>
-                <Box className="p-8 md:p-12 bg-white">
+              <Grid  size={{ xs: 12, md: 7 }}>
+                <Box sx={{ p: { xs: 3, md: 5 }, bgcolor: "#ffffff" }}>
                   <Typography
                     variant="h4"
-                    sx={{ fontWeight: 900, color: "#0f172a", mb: 1.5 }}
+                    sx={{ fontWeight: 800, color: "#0f172a", mb: 1.5 }}
                   >
                     Let’s Connect
                   </Typography>
@@ -614,7 +627,7 @@ export default function ContactUs() {
                   <Typography
                     sx={{
                       color: "#475569",
-                      lineHeight: 1.95,
+                      lineHeight: 1.9,
                       mb: 4,
                       maxWidth: "680px",
                     }}
@@ -630,9 +643,9 @@ export default function ContactUs() {
                     <Box>
                       <Typography
                         sx={{
-                          fontWeight: 800,
+                          fontWeight: 700,
                           color: "#0f172a",
-                          mb: 0.8,
+                          mb: 1,
                         }}
                       >
                         Team Focus
@@ -649,9 +662,9 @@ export default function ContactUs() {
                     <Box>
                       <Typography
                         sx={{
-                          fontWeight: 800,
+                          fontWeight: 700,
                           color: "#0f172a",
-                          mb: 0.8,
+                          mb: 1,
                         }}
                       >
                         Availability
@@ -666,9 +679,9 @@ export default function ContactUs() {
                     <Box>
                       <Typography
                         sx={{
-                          fontWeight: 800,
+                          fontWeight: 700,
                           color: "#0f172a",
-                          mb: 0.8,
+                          mb: 1,
                         }}
                       >
                         Quick Contact Options
@@ -676,7 +689,7 @@ export default function ContactUs() {
                       <Stack direction="row" spacing={1.5} useFlexGap flexWrap="wrap">
                         <Button
                           component="a"
-                          href={toWhatsApp("067 776 7134")}
+                          href={toWhatsApp("081 525 2702")}
                           target="_blank"
                           rel="noopener noreferrer"
                           startIcon={<WhatsAppIcon />}
@@ -685,7 +698,9 @@ export default function ContactUs() {
                             bgcolor: "#16a34a",
                             borderRadius: "14px",
                             fontWeight: 700,
-                            "&:hover": { bgcolor: "#15803d" },
+                            textTransform: "none",
+                            boxShadow: "none",
+                            "&:hover": { bgcolor: "#15803d", boxShadow: "none" },
                           }}
                         >
                           WhatsApp Karabo
@@ -693,7 +708,7 @@ export default function ContactUs() {
 
                         <Button
                           component="a"
-                          href={toWhatsApp("0815252702")}
+                          href={toWhatsApp("082 705 6724")}
                           target="_blank"
                           rel="noopener noreferrer"
                           startIcon={<MessageIcon />}
@@ -701,6 +716,7 @@ export default function ContactUs() {
                           sx={{
                             borderRadius: "14px",
                             fontWeight: 700,
+                            textTransform: "none",
                             color: "#16a34a",
                             borderColor: "#16a34a",
                           }}
@@ -713,58 +729,55 @@ export default function ContactUs() {
                 </Box>
               </Grid>
 
-              <Grid item xs={12} md={5}>
-                <Box className="bg-green-500 h-full p-8 md:p-12 text-white flex flex-col justify-center">
-                  <Typography variant="h5" sx={{ fontWeight: 900, mb: 1.5 }}>
+              <Grid  size={{ xs: 12, md: 5 }}>
+                <Box
+                  sx={{
+                    height: "100%",
+                    p: { xs: 3, md: 5 },
+                    color: "white",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    background:
+                      "linear-gradient(135deg, #15803d 0%, #22c55e 100%)",
+                  }}
+                >
+                  <Typography variant="h5" sx={{ fontWeight: 800, mb: 1.5 }}>
                     Professional. Creative. Reliable.
                   </Typography>
 
-                  <Typography sx={{ lineHeight: 1.95, opacity: 0.96, mb: 3 }}>
+                  <Typography sx={{ lineHeight: 1.9, opacity: 0.96, mb: 3 }}>
                     Our team is committed to quality work, clean design,
                     dependable development, and strong collaboration. Every
                     contribution is focused on delivering a refined and
                     effective final product.
                   </Typography>
 
-                  <Divider sx={{ borderColor: "rgba(255,255,255,0.18)", mb: 3 }} />
+                  <Divider
+                    sx={{
+                      borderColor: "rgba(255,255,255,0.18)",
+                      mb: 3,
+                    }}
+                  />
 
                   <Stack spacing={1.5}>
-                    <Chip
-                      label="Tech Leadership"
-                      sx={{
-                        bgcolor: "rgba(255,255,255,0.14)",
-                        color: "white",
-                        width: "fit-content",
-                        fontWeight: 700,
-                      }}
-                    />
-                    <Chip
-                      label="Full Stack Engineering"
-                      sx={{
-                        bgcolor: "rgba(255,255,255,0.14)",
-                        color: "white",
-                        width: "fit-content",
-                        fontWeight: 700,
-                      }}
-                    />
-                    <Chip
-                      label="Frontend & Backend Solutions"
-                      sx={{
-                        bgcolor: "rgba(255,255,255,0.14)",
-                        color: "white",
-                        width: "fit-content",
-                        fontWeight: 700,
-                      }}
-                    />
-                    <Chip
-                      label="User Interface Design"
-                      sx={{
-                        bgcolor: "rgba(255,255,255,0.14)",
-                        color: "white",
-                        width: "fit-content",
-                        fontWeight: 700,
-                      }}
-                    />
+                    {[
+                      "Tech Leadership",
+                      "Full Stack Engineering",
+                      "Frontend & Backend Solutions",
+                      "User Interface Design",
+                    ].map((item) => (
+                      <Chip
+                        key={item}
+                        label={item}
+                        sx={{
+                          bgcolor: "rgba(255,255,255,0.14)",
+                          color: "white",
+                          width: "fit-content",
+                          fontWeight: 700,
+                        }}
+                      />
+                    ))}
                   </Stack>
                 </Box>
               </Grid>

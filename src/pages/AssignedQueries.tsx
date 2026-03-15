@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../api/axios";
 import QueryDetailsModal from "../form/QueryReply";
+import FeedbackPopup from "../components/FeedbackPopUp";
 
 import {
   Table,
@@ -20,6 +21,16 @@ interface AssignedQuery {
   created_at: string;
 }
 
+interface ApiErrorResponse {
+  message?: string;
+}
+
+interface ApiResponse {
+  success: boolean;
+  message?: string;
+  data: AssignedQuery[];
+}
+
 const statusStyles = (status: string) => {
   switch (status) {
     case "RESOLVED":
@@ -35,137 +46,160 @@ const statusStyles = (status: string) => {
 
 export default function AssignedQueries() {
   const [queries, setQueries] = useState<AssignedQuery[]>([]);
-  const [selectedQuery, setSelectedQuery] =
-    useState<AssignedQuery | null>(null);
+  const [selectedQuery, setSelectedQuery] = useState<AssignedQuery | null>(null);
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [popupSeverity, setPopupSeverity] = useState<
+    "success" | "error" | "info" | "warning"
+  >("info");
+
+  function showPopup(
+    message: string,
+    severity: "success" | "error" | "info" | "warning"
+  ) {
+    setPopupMessage(message);
+    setPopupSeverity(severity);
+    setPopupOpen(true);
+  }
 
   useEffect(() => {
     const fetchAssignedQueries = async () => {
-      const res = await axios.get("/queries/assigned/facilitator");
-      setQueries(res.data.result);
+      try {
+        setLoading(true);
+
+        const res = await axios.get<ApiResponse>(
+          "/queries/assigned/facilitator"
+        );
+
+        if (!res.data.success) {
+          throw new Error(res.data.message || "Failed to fetch queries");
+        }
+
+        setQueries(res.data.data);
+
+        showPopup("Assigned queries loaded successfully", "success");
+      } catch (error: unknown) {
+        let message = "Failed to load assigned queries";
+
+        if (typeof error === "object" && error !== null) {
+          const err = error as { response?: { data?: ApiErrorResponse } };
+
+          if (err.response?.data?.message) {
+            message = err.response.data.message;
+          }
+        }
+
+        showPopup(message, "error");
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchAssignedQueries();
   }, []);
 
   const handleViewQuery = (query: AssignedQuery) => {
-    console.log("Selected query:", query.id);
-    console.log("Selected query details:", query);
     setSelectedQuery(query);
     setOpen(true);
   };
 
   return (
     <>
-      {/* CONTAINER */}
       <div className="bg-white rounded-2xl shadow-sm p-6 mt-8">
         <h3 className="font-semibold text-gray-900 mb-4">
           Assigned Queries
         </h3>
 
-        {/* SCROLLABLE TABLE */}
         <div className="border border-green-200 rounded-xl max-h-[420px] overflow-y-auto">
           <TableContainer>
             <Table stickyHeader size="small">
               <TableHead>
                 <TableRow className="bg-green-100">
-                  <TableCell className="font-medium text-gray-700">
-                    ID
-                  </TableCell>
-                  <TableCell className="font-medium text-gray-700">
-                    Phone
-                  </TableCell>
-                  <TableCell className="font-medium text-gray-700">
-                    Question
-                  </TableCell>
-                  <TableCell className="font-medium text-gray-700">
-                    Status
-                  </TableCell>
-                  <TableCell className="font-medium text-gray-700">
-                    Date
-                  </TableCell>
-                  <TableCell className="font-medium text-gray-700">
-                    Action
-                  </TableCell>
+                  <TableCell>ID</TableCell>
+                  <TableCell>Phone</TableCell>
+                  <TableCell>Question</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
 
               <TableBody>
-                {queries.length === 0 && (
+                {loading && (
                   <TableRow>
-                    <TableCell
-                      colSpan={5}
-                      className="text-center text-gray-500 py-6"
-                    >
+                    <TableCell colSpan={6} className="text-center py-6">
+                      Loading queries...
+                    </TableCell>
+                  </TableRow>
+                )}
+
+                {!loading && queries.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-6">
                       No assigned queries
                     </TableCell>
                   </TableRow>
                 )}
 
-                {queries.map((q) => (
-                  <TableRow
-                    key={q.id}
-                    hover
-                    className="transition"
-                  >
-                    <TableCell className="text-gray-900">
-                      {q.id}
-                    </TableCell>
+                {!loading &&
+                  queries.map((q) => (
+                    <TableRow key={q.id} hover>
+                      <TableCell>{q.id}</TableCell>
 
-                    <TableCell className="text-gray-900">
-                      {q.phone}
-                    </TableCell>
+                      <TableCell>{q.phone}</TableCell>
 
-                    <TableCell className="text-gray-600 max-w-[320px] truncate">
-                      {q.question}
-                    </TableCell>
+                      <TableCell className="max-w-[320px] truncate">
+                        {q.question}
+                      </TableCell>
 
-                    <TableCell>
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${statusStyles(
-                          q.status
-                        )}`}
-                      >
-                        {q.status}
-                      </span>
-                    </TableCell>
+                      <TableCell>
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-medium ${statusStyles(
+                            q.status
+                          )}`}
+                        >
+                          {q.status}
+                        </span>
+                      </TableCell>
 
-                    <TableCell className="text-gray-600">
-                      {new Date(q.created_at).toLocaleDateString("en-US", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </TableCell>
+                      <TableCell>
+                        {new Date(q.created_at).toLocaleDateString("en-US", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </TableCell>
 
-                    <TableCell>
-                      <Button
-                        size="small"
-                        onClick={() => handleViewQuery(q)}
-                        sx={{
-                          borderRadius: "12px",
-                          textTransform: "none",
-                          borderColor: "#16a34a",
-                          color: "#16a34a",
-                          "&:hover": {
-                            backgroundColor: "#dcfce7",
-                            borderColor: "#15803d",
-                          },
-                        }}
-                        variant="outlined"
-                      >
-                        View Query
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      <TableCell>
+                        <Button
+                          size="small"
+                          onClick={() => handleViewQuery(q)}
+                          variant="outlined"
+                          sx={{
+                            borderRadius: "12px",
+                            textTransform: "none",
+                            borderColor: "#16a34a",
+                            color: "#16a34a",
+                            "&:hover": {
+                              backgroundColor: "#dcfce7",
+                              borderColor: "#15803d",
+                            },
+                          }}
+                        >
+                          View Query
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
         </div>
       </div>
 
-      {/* MODAL */}
       {selectedQuery && (
         <QueryDetailsModal
           open={open}
@@ -173,6 +207,13 @@ export default function AssignedQueries() {
           query={selectedQuery}
         />
       )}
+
+      <FeedbackPopup
+        open={popupOpen}
+        message={popupMessage}
+        severity={popupSeverity}
+        onClose={() => setPopupOpen(false)}
+      />
     </>
   );
 }

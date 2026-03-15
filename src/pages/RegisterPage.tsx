@@ -11,7 +11,7 @@ import {
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser, clearStatus } from "../store/authSlice";
@@ -24,47 +24,51 @@ import {
   validateRegisterForm,
   type RegisterFormValues,
 } from "../utils/registerValidation";
-import { useNavigate } from "react-router-dom";
-
 
 const RegisterPage = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  // Form state
+  const [fullName, setFullName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [role, setRole] = useState<Role>(Role.Facilitator);
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [agreeTerms, setAgreeTerms] = useState<boolean>(false);
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // Password visibility
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+
+  // Validation errors
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Redux state
   const { loading, success, error, successMessage } = useSelector(
     (state: RootState) => state.auth
   );
 
-  const navigate = useNavigate();
-
+  // Redirect on success
   useEffect(() => {
-  if (success) {
-    setTimeout(() => {
-      navigate("/login");
-      dispatch(clearStatus());
-    }, 1500);
-  }
-}, [success, navigate, dispatch]);
+    if (success) {
+      const timer = setTimeout(() => {
+        navigate("/login");
+        dispatch(clearStatus());
+      }, 1500);
 
+      return () => clearTimeout(timer);
+    }
+  }, [success, navigate, dispatch]);
 
-
+  // Validate form
   const validateForm = (): boolean => {
     const values: RegisterFormValues = {
       fullName,
       email,
-      role,
       phoneNumber,
+      role,
       password,
       confirmPassword,
       agreeTerms,
@@ -76,6 +80,7 @@ const RegisterPage = () => {
     return Object.keys(validationErrors).length === 0;
   };
 
+  // Handle form submit
   const handleRegister = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -87,15 +92,12 @@ const RegisterPage = () => {
 
   return (
     <main className="flex flex-col min-h-screen items-center justify-between gap-8">
-
       <section className="bg-green-500 py-4 flex justify-center w-full">
         <img src="/src/assets/CodeTribe Logo.svg" alt="CodeTribe Logo" />
       </section>
 
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-500">
-          Create Your Account
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-500">Create Your Account</h1>
         <p className="text-gray-500">
           Join CodeTribe Academy to empower learners efficiently
         </p>
@@ -116,7 +118,6 @@ const RegisterPage = () => {
           onSubmit={handleRegister}
           className="flex flex-col gap-4 w-80 border border-green-500 rounded-lg p-6"
         >
-
           <InputField
             label="Full Name"
             icon={faUser}
@@ -124,9 +125,7 @@ const RegisterPage = () => {
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
           />
-          {errors.fullName && (
-            <p className="text-red-500 text-xs">{errors.fullName}</p>
-          )}
+          {errors.fullName && <p className="text-red-500 text-xs">{errors.fullName}</p>}
 
           <InputField
             label="Email"
@@ -135,9 +134,7 @@ const RegisterPage = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          {errors.email && (
-            <p className="text-red-500 text-xs">{errors.email}</p>
-          )}
+          {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
 
           <InputField
             label="Phone Number"
@@ -146,9 +143,7 @@ const RegisterPage = () => {
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
           />
-          {errors.phoneNumber && (
-            <p className="text-red-500 text-xs">{errors.phoneNumber}</p>
-          )}
+          {errors.phoneNumber && <p className="text-red-500 text-xs">{errors.phoneNumber}</p>}
 
           <InputField
             label="Password"
@@ -160,9 +155,7 @@ const RegisterPage = () => {
             rightIcon={showPassword ? faEyeSlash : faEye}
             onRightIconClick={() => setShowPassword((p) => !p)}
           />
-          {errors.password && (
-            <p className="text-red-500 text-xs">{errors.password}</p>
-          )}
+          {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
 
           <InputField
             label="Confirm Password"
@@ -195,7 +188,6 @@ const RegisterPage = () => {
             ))}
           </select>
 
-          {/* Terms */}
           <FormControlLabel
             control={
               <Checkbox

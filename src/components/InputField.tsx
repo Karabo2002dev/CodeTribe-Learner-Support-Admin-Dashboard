@@ -7,6 +7,7 @@ interface InputProps {
   icon: IconDefinition;
   type?: string;
   value: string;
+  name?: string;
   placeholder: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   rightIcon?: IconDefinition;
@@ -18,6 +19,7 @@ export const InputField = ({
   icon,
   type = "text",
   value,
+  name,
   placeholder,
   onChange,
   rightIcon,
@@ -38,7 +40,7 @@ export const InputField = ({
       <input
         type={type}
         value={value}
-        name={label.toLowerCase().replace(" ", "-")}
+        name={name || label.toLowerCase().replace(" ", "-")}
         onChange={onChange}
         placeholder={placeholder}
         className="w-full py-3 pl-10 pr-10 border rounded-xl border-green-500 focus:outline-none text-xs"
