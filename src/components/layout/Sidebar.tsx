@@ -15,7 +15,7 @@ import {
 import { MdOutlineSupportAgent } from "react-icons/md";
 import { HiOutlineDocumentText } from "react-icons/hi2";
 import { LuMessageSquareMore } from "react-icons/lu";
-import { TbReportAnalytics } from "react-icons/tb";
+
 
 type SidebarLink = {
   to: string;
@@ -32,7 +32,6 @@ export default function Sidebar() {
     { to: "dashboard", label: "Dashboard", icon: <FiHome size={18} /> },
     { to: "queries", label: "Queries", icon: <LuMessageSquareMore size={18} /> },
     { to: "documents", label: "Documents", icon: <HiOutlineDocumentText size={18} /> },
-    { to: "reports", label: "Reports", icon: <TbReportAnalytics size={18} /> },
     { to: "users", label: "Users", icon: <FiUsers size={18} /> },
     { to: "settings", label: "Settings", icon: <FiSettings size={18} /> },
     { to: "ContactUs", label: "Contact Us", icon: <FiFileText size={18} /> },
@@ -76,7 +75,7 @@ export default function Sidebar() {
             <span className="text-gray-500">Tribe</span>
           </h1>
 
-          <button onClick={handleLogout} className="h-10 w-10 rounded-xl flex items-center justify-center text-gray-700 hover:bg-white transition">
+          <button title="log-out" type="button" onClick={handleLogout} className="h-10 w-10 rounded-xl flex items-center justify-center text-gray-700 hover:bg-white transition">
             <FiLogOut size={20} />
           </button>
         </div>
