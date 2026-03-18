@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faUserPlus,
+  faRightToBracket,
   faEnvelope,
   faLock,
   faEye,
@@ -34,15 +34,16 @@ const LogInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const { loading, success, error, successMessage, user } = useSelector(
-    (state: RootState) => state.auth
+    (state: RootState) => state.auth,
   );
 
-  // Handle form input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormValues({ ...formValues, [e.target.name]: e.target.value });
+    setFormValues((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  // Handle form submission
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -54,10 +55,8 @@ const LogInPage = () => {
     }
   };
 
-  // Close modal
   const handleCloseModal = () => dispatch(clearStatus());
 
-  // Redirect after successful login
   useEffect(() => {
     if (success && user) {
       const timer = setTimeout(() => {
@@ -68,91 +67,135 @@ const LogInPage = () => {
         } else {
           navigate("/login");
         }
+
         dispatch(clearStatus());
-      }, 1000); // short delay to show success modal
+      }, 1000);
 
       return () => clearTimeout(timer);
     }
   }, [success, user, navigate, dispatch]);
 
-  // Auto-close modal after 4 seconds
   useEffect(() => {
     if (success || error) {
       const timer = setTimeout(() => {
         handleCloseModal();
       }, 4000);
+
       return () => clearTimeout(timer);
     }
-  }, [success, error]);
+  }, [success, error, dispatch]);
 
   return (
-    <main className="flex flex-col min-h-screen justify-between items-center gap-16 bg-gray-50">
+    <main className="flex min-h-screen flex-col bg-slate-50">
       {/* Header */}
-      <section className="bg-green-500 py-4 flex justify-center w-full">
-        <img src="/src/assets/CodeTribe Logo.svg" alt="CodeTribe Logo" />
+      <header className="border-b border-gray-200 bg-white">
+        <div className="mx-auto flex w-full max-w-7xl justify-center px-6 py-5">
+          <div className="inline-flex items-center rounded-2xl border border-gray-200 bg-white px-6 py-3 shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+            <h1 className="text-[24px] font-bold tracking-tight">
+              <span className="text-[#8BC34A]">Code</span>
+              <span className="text-gray-700">Tribe</span>
+            </h1>
+          </div>
+        </div>
+      </header>
+
+      {/* Main */}
+      <section className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6">
+        <div className="w-full max-w-md">
+          <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.04)] md:p-8">
+            {/* Intro */}
+            <div className="mb-6 text-center">
+              <h2 className="text-2xl font-semibold text-gray-900">
+                Sign In to Your Account
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-gray-500">
+                Access your dashboard and continue managing your work.
+              </p>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleLogin} className="flex flex-col gap-4">
+              <div>
+                <InputField
+                  label="Email"
+                  icon={faEnvelope}
+                  type="email"
+                  name="email"
+                  value={formValues.email}
+                  placeholder="Enter your email"
+                  onChange={handleChange}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-xs text-red-500">{errors.email}</p>
+                )}
+              </div>
+
+              <div>
+                <InputField
+                  label="Password"
+                  icon={faLock}
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formValues.password}
+                  placeholder="Enter your password"
+                  onChange={handleChange}
+                  rightIcon={showPassword ? faEyeSlash : faEye}
+                  onRightIconClick={() => setShowPassword((prev) => !prev)}
+                />
+                {errors.password && (
+                  <p className="mt-1 text-xs text-red-500">{errors.password}</p>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between gap-3">
+                <FormControlLabel
+                  control={<Checkbox color="success" />}
+                  label={
+                    <span className="text-sm text-gray-600">Remember me</span>
+                  }
+                  sx={{ marginRight: 0 }}
+                />
+
+                <button
+                  type="button"
+                  className="text-sm font-medium text-green-600 transition hover:text-green-700"
+                >
+                  Forgot password?
+                </button>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="mt-2 flex items-center justify-center gap-2 rounded-xl bg-gray-900 px-4 py-3 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <FontAwesomeIcon icon={faRightToBracket} />
+                <span>{loading ? "Signing in..." : "Sign In"}</span>
+              </button>
+            </form>
+
+            {/* Divider */}
+            <div className="my-6 h-px bg-gray-100" />
+
+            {/* Sign up link */}
+            <div className="text-center text-sm text-gray-600">
+              Don’t have an account?{" "}
+              <button
+                type="button"
+                onClick={() => navigate("/")}
+                className="font-medium text-green-600 transition hover:text-green-700"
+              >
+                Sign up
+              </button>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* Login Form */}
-      <div className="flex flex-col items-center w-full gap-8">
-        <h1 className="text-2xl font-bold text-gray-500">
-          Sign In To Your Account
-        </h1>
-
-        <form
-          onSubmit={handleLogin}
-          className="flex flex-col gap-4 w-80 border border-green-500 rounded-lg p-6 bg-white shadow"
-        >
-          {/* Email */}
-          <InputField
-            label="Email"
-            icon={faEnvelope}
-            type="email"
-            name="email"
-            value={formValues.email}
-            placeholder="Enter your email"
-            onChange={handleChange}
-          />
-          {errors.email && (
-            <p className="text-red-500 text-xs">{errors.email}</p>
-          )}
-
-          {/* Password */}
-          <InputField
-            label="Password"
-            icon={faLock}
-            type={showPassword ? "text" : "password"}
-            name="password"
-            value={formValues.password}
-            placeholder="Enter your password"
-            onChange={handleChange}
-            rightIcon={showPassword ? faEyeSlash : faEye}
-            onRightIconClick={() => setShowPassword(!showPassword)}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-xs">{errors.password}</p>
-          )}
-
-          {/* Remember me */}
-          <FormControlLabel
-            control={<Checkbox color="success" />}
-            label="Remember me"
-          />
-
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-green-500 text-white py-2 rounded-md hover:bg-green-600 disabled:opacity-60 flex items-center justify-center gap-2"
-          >
-            <FontAwesomeIcon icon={faUserPlus} />
-            <span>{loading ? "Signing in..." : "Sign In"}</span>
-          </button>
-        </form>
-      </div>
-
       {/* Footer */}
-      <footer className="w-full border-t border-gray-200 py-4 flex justify-center text-gray-500 text-sm">
-        &copy; {new Date().getFullYear()} CodeTribe Academy. All rights reserved.
+      <footer className="border-t border-gray-200 bg-white py-4 text-center text-sm text-gray-500">
+        &copy; {new Date().getFullYear()} CodeTribe Academy. All rights
+        reserved.
       </footer>
 
       {/* Modals */}
@@ -163,7 +206,10 @@ const LogInPage = () => {
           onClose={handleCloseModal}
         />
       )}
-      {error && <Modal type="error" message={error} onClose={handleCloseModal} />}
+
+      {error && (
+        <Modal type="error" message={error} onClose={handleCloseModal} />
+      )}
     </main>
   );
 };

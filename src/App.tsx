@@ -10,7 +10,6 @@ import DashboardLayout from "./components/layout/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import Queries from "./pages/Queries";
 import AdminDocEditor from "./pages/AdminDocEditor";
-import Reports from "./pages/ReportsPage";
 import Settings from "./pages/SettingsPage";
 import Users from "./pages/UsersPage";
 import ContactUs from "./pages/ContactUs";
@@ -60,7 +59,6 @@ function App() {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="queries" element={<Queries />} />
         <Route path="documents" element={<AdminDocEditor />} />
-        <Route path="reports" element={<Reports />} />
         <Route path="users" element={<Users />} />
         <Route path="settings" element={<Settings />} />
         <Route path="ContactUs" element={<ContactUs />} />

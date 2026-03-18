@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../api/axios";
+
+import { isAxiosError, type AxiosError } from "axios";
 import {
   Alert,
   AppBar,
@@ -41,10 +43,52 @@ type RagDoc = {
   sections: Section[];
 };
 
+type AdminDocResponse = {
+  content: RagDoc;
+};
+
+type BackendErrorResponse = {
+  error?: string;
+  details?: string;
+  message?: string;
+};
+
 const DEFAULT_DOCKEY = "latest.json";
 
-function makeId(prefix = "sec") {
+function makeId(prefix = "sec"): string {
   return `${prefix}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
+}
+
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (isAxiosError(error)) {
+    const axiosError = error as AxiosError<BackendErrorResponse>;
+    const backend = axiosError.response?.data;
+
+    if (backend?.error) {
+      return `${backend.error}${backend.details ? ` - ${backend.details}` : ""}`;
+    }
+
+    if (backend?.message) {
+      return backend.message;
+    }
+
+    return axiosError.message || fallback;
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return fallback;
+}
+
+function getErrorPayload(error: unknown): BackendErrorResponse | undefined {
+  if (isAxiosError(error)) {
+    const axiosError = error as AxiosError<BackendErrorResponse>;
+    return axiosError.response?.data;
+  }
+
+  return undefined;
 }
 
 const ui = {
@@ -520,19 +564,16 @@ export default function AdminDocEditor() {
     setSuccessMsg(null);
 
     try {
-      const { data } = await axios.get("/admin/doc", {
+      const { data } = await axios.get<AdminDocResponse>("/admin/doc", {
         params: { docKey: key },
         headers: { Accept: "application/json" },
       });
 
-      setDoc(data.content as RagDoc);
+      setDoc(data.content);
       showSnack("success", "Document loaded successfully");
-    } catch (e: any) {
-      const backend = e?.response?.data;
-
-      const msg = backend?.error
-        ? `${backend.error}${backend.details ? " - " + backend.details : ""}`
-        : e?.message || "Failed to load document";
+    } catch (error: unknown) {
+      const msg = getErrorMessage(error, "Failed to load document");
+      const backend = getErrorPayload(error);
 
       setError(msg);
       setDoc(null);
@@ -561,12 +602,9 @@ export default function AdminDocEditor() {
       setSuccessMsg("Saved successfully");
       showSnack("success", "Saved successfully");
       await loadDoc(docKey.trim());
-    } catch (e: any) {
-      const backend = e?.response?.data;
-
-      const msg = backend?.error
-        ? `${backend.error}${backend.details ? " - " + backend.details : ""}`
-        : e?.message || "Failed to save document";
+    } catch (error: unknown) {
+      const msg = getErrorMessage(error, "Failed to save document");
+      const backend = getErrorPayload(error);
 
       setError(msg);
       showSnack("error", msg);
@@ -578,8 +616,7 @@ export default function AdminDocEditor() {
   }
 
   useEffect(() => {
-    loadDoc(DEFAULT_DOCKEY);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    void loadDoc(DEFAULT_DOCKEY);
   }, []);
 
   function updateDocField<K extends keyof RagDoc>(key: K, value: RagDoc[K]) {
@@ -687,8 +724,12 @@ export default function AdminDocEditor() {
         loading={loading}
         saving={saving}
         hasDoc={!!doc}
-        onLoad={() => loadDoc(docKey)}
-        onSave={saveDoc}
+        onLoad={() => {
+          void loadDoc(docKey);
+        }}
+        onSave={() => {
+          void saveDoc();
+        }}
       />
 
       <Box sx={ui.shell}>

@@ -142,13 +142,13 @@ export default function RecentQueriesTable() {
           </div>
 
           <div className="flex items-center gap-2">
-            <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 transition hover:bg-gray-50">
+            <button title="Filter" className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 transition hover:bg-gray-50">
               <Tune fontSize="small" />
             </button>
-            <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 transition hover:bg-gray-50">
+            <button title="Grid View" className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 transition hover:bg-gray-50">
               <GridView fontSize="small" />
             </button>
-            <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 transition hover:bg-gray-50">
+            <button title="Table View" className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 transition hover:bg-gray-50">
               <TableRows fontSize="small" />
             </button>
           </div>
@@ -209,7 +209,7 @@ export default function RecentQueriesTable() {
                   </td>
 
                   <td className="px-4 py-4">
-                    <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 transition hover:bg-gray-50">
+                    <button type="button" title="More options" className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 transition hover:bg-gray-50">
                       <MoreHoriz fontSize="small" />
                     </button>
                   </td>
